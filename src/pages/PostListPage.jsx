@@ -263,14 +263,14 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
                               {post.profiles?.name || post.profiles?.username}
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <AccessTimeIcon sx={{ fontSize: 11, color: 'text.disabled' }} />
-                              <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                              <AccessTimeIcon sx={{ fontSize: 14, color: 'rgb(192, 212, 232)' }} />
+                              <Typography variant="caption" sx={{ color: 'rgb(192, 212, 232)' }}>
                                 {formatDate(post.created_at)}
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <VisibilityIcon sx={{ fontSize: 11, color: 'text.disabled' }} />
-                              <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                              <VisibilityIcon sx={{ fontSize: 14, color: 'rgb(192, 212, 232)' }} />
+                              <Typography variant="caption" sx={{ color: 'rgb(192, 212, 232)' }}>
                                 {post.view_count}
                               </Typography>
                             </Box>
