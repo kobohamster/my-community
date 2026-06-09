@@ -7,7 +7,6 @@ import PostListPage from './pages/PostListPage'
 import PostWritePage from './pages/PostWritePage'
 import PostDetailPage from './pages/PostDetailPage'
 import PostEditPage from './pages/PostEditPage'
-import StarBackground from './components/StarBackground'
 
 const GUEST_DURATION_MS = 3 * 60 * 1000 // 3분
 
@@ -70,8 +69,6 @@ const App = () => {
   if (session === undefined) return null
 
   return (
-    <>
-    <StarBackground />
     <BrowserRouter>
       <Routes>
         <Route
@@ -133,7 +130,6 @@ const App = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
-    </>
   )
 }
 
