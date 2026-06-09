@@ -67,14 +67,14 @@ const PostWritePage = ({ session, profile }) => {
         }}
       >
         <Container maxWidth="md">
-          <Box sx={{ py: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-            <IconButton onClick={() => navigate(-1)} sx={{ color: 'text.secondary' }}>
+          <Box sx={{ py: { xs: 1.5, sm: 2 }, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <IconButton onClick={() => navigate(-1)} sx={{ color: 'text.secondary', p: { xs: 0.5, sm: 1 } }}>
               <ArrowBackIcon />
             </IconButton>
             <Typography
               sx={{
                 fontFamily: '"Press Start 2P", monospace',
-                fontSize: '0.9rem',
+                fontSize: { xs: '0.7rem', sm: '0.9rem' },
                 color: '#5a9be8',
                 textShadow: '0 0 10px rgba(58,123,213,0.4)',
               }}
@@ -85,8 +85,8 @@ const PostWritePage = ({ session, profile }) => {
         </Container>
       </Box>
 
-      <Container maxWidth="md" sx={{ py: 4 }}>
-        <Typography variant="h2" sx={{ mb: 4 }}>글쓰기</Typography>
+      <Container maxWidth="md" sx={{ py: { xs: 3, sm: 4 }, px: { xs: 2, sm: 3 } }}>
+        <Typography variant="h2" sx={{ mb: { xs: 3, sm: 4 }, fontSize: { xs: '1.3rem', sm: '1.5rem' } }}>글쓰기</Typography>
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
@@ -158,7 +158,7 @@ const PostWritePage = ({ session, profile }) => {
             </Button>
           )}
 
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
             <Button
               variant="outlined"
               onClick={() => navigate(-1)}

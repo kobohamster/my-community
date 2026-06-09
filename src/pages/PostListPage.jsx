@@ -62,43 +62,60 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
         }}
       >
         <Container maxWidth="md">
-          <Box sx={{ py: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box
+            sx={{
+              py: { xs: 1.5, sm: 2 },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
             <Typography
               sx={{
                 fontFamily: '"Press Start 2P", monospace',
-                fontSize: '0.9rem',
+                fontSize: { xs: '0.7rem', sm: '0.9rem' },
                 color: '#5a9be8',
                 textShadow: '0 0 10px rgba(58,123,213,0.5)',
               }}
             >
               UNTIL DAWN
             </Typography>
+
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
               {isGuest ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <TimerOutlinedIcon sx={{ fontSize: 14, color: guestSecondsLeft < 60 ? '#c05070' : 'text.disabled' }} />
+                  <TimerOutlinedIcon
+                    sx={{ fontSize: 14, color: guestSecondsLeft < 60 ? '#c05070' : 'text.disabled' }}
+                  />
                   <Typography
                     variant="caption"
-                    sx={{ color: guestSecondsLeft < 60 ? '#c05070' : 'text.disabled', fontFamily: 'monospace' }}
+                    sx={{
+                      color: guestSecondsLeft < 60 ? '#c05070' : 'text.disabled',
+                      fontFamily: 'monospace',
+                    }}
                   >
                     {formatSeconds(guestSecondsLeft)}
                   </Typography>
                 </Box>
               ) : (
-                <Typography variant="caption" sx={{ color: 'text.secondary', mr: 1 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'text.secondary',
+                    mr: 1,
+                    display: { xs: 'none', sm: 'block' },
+                  }}
+                >
                   {profile?.name}
                 </Typography>
               )}
+
               {isGuest ? (
                 <Button
                   size="small"
                   variant="outlined"
                   onClick={() => navigate('/login')}
-                  sx={{
-                    borderColor: 'rgba(58,123,213,0.4)',
-                    color: '#5a9be8',
-                    fontSize: '0.75rem',
-                  }}
+                  sx={{ borderColor: 'rgba(58,123,213,0.4)', color: '#5a9be8', fontSize: '0.75rem' }}
                 >
                   로그인
                 </Button>
@@ -122,7 +139,7 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
         </Container>
       </Box>
 
-      <Container maxWidth="md" sx={{ py: 4 }}>
+      <Container maxWidth="md" sx={{ py: { xs: 3, sm: 4 }, px: { xs: 2, sm: 3 } }}>
         {/* 게스트 안내 배너 */}
         {isGuest && (
           <Alert
@@ -136,18 +153,27 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
               '& .MuiAlert-icon': { color: '#3a7bd5' },
             }}
           >
-            둘러보기 중입니다. 남은 시간{' '}
+            둘러보기 중 — 남은 시간{' '}
             <strong style={{ color: guestSecondsLeft < 60 ? '#c05070' : '#5a9be8' }}>
               {formatSeconds(guestSecondsLeft)}
             </strong>{' '}
-            — 글쓰기는 로그인 후 이용할 수 있습니다.
+            / 글쓰기는 로그인 후 이용 가능
           </Alert>
         )}
 
-        {/* 타이틀 + 글쓰기 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+        {/* 타이틀 + 글쓰기 버튼 */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            gap: 2,
+            mb: 4,
+          }}
+        >
           <Box>
-            <Typography variant="h2" sx={{ mb: 0.5 }}>
+            <Typography variant="h2" sx={{ mb: 0.5, fontSize: { xs: '1.3rem', sm: '1.5rem' } }}>
               게시물 목록
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -161,9 +187,9 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
             disabled={isGuest}
             sx={{
               whiteSpace: 'nowrap',
+              alignSelf: { xs: 'flex-end', sm: 'auto' },
               ...(isGuest && { opacity: 0.4 }),
             }}
-            title={isGuest ? '로그인 후 글쓰기 가능' : ''}
           >
             글쓰기
           </Button>
@@ -183,7 +209,7 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
             </Typography>
           </Box>
         ) : (
-          <Grid container spacing={2}>
+          <Grid container spacing={{ xs: 1.5, sm: 2 }}>
             {posts.map((post) => (
               <Grid item xs={12} key={post.id}>
                 <Card
@@ -194,33 +220,53 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
                   }}
                 >
                   <CardActionArea onClick={() => navigate(`/post/${post.id}`)}>
-                    <CardContent sx={{ p: 3 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 2 }}>
+                    <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'space-between',
+                          gap: 1.5,
+                        }}
+                      >
                         <Box sx={{ flex: 1, minWidth: 0 }}>
                           <Typography
                             variant="h4"
-                            sx={{ mb: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                            sx={{
+                              mb: 0.8,
+                              fontSize: { xs: '0.95rem', sm: '1.1rem' },
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
                           >
                             {post.title}
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', mb: 2 }}
+                            sx={{
+                              color: 'text.secondary',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              mb: 1.5,
+                              display: { xs: 'none', sm: 'block' },
+                            }}
                           >
                             {post.content}
                           </Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 }, flexWrap: 'wrap' }}>
                             <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                               {post.profiles?.name || post.profiles?.username}
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <AccessTimeIcon sx={{ fontSize: 12, color: 'text.disabled' }} />
+                              <AccessTimeIcon sx={{ fontSize: 11, color: 'text.disabled' }} />
                               <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                                 {formatDate(post.created_at)}
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <VisibilityIcon sx={{ fontSize: 12, color: 'text.disabled' }} />
+                              <VisibilityIcon sx={{ fontSize: 11, color: 'text.disabled' }} />
                               <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                                 {post.view_count}
                               </Typography>
@@ -235,7 +281,7 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
                               background: 'rgba(58,123,213,0.1)',
                               color: '#5a9be8',
                               border: '1px solid rgba(58,123,213,0.3)',
-                              fontSize: '0.75rem',
+                              fontSize: '0.7rem',
                               flexShrink: 0,
                             }}
                           />

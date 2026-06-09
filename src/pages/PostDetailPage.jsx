@@ -16,7 +16,7 @@ const formatDate = (iso) => {
   })
 }
 
-const PostDetailPage = ({ session, profile }) => {
+const PostDetailPage = ({ session, profile, isGuest }) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [post, setPost] = useState(null)
@@ -27,10 +27,7 @@ const PostDetailPage = ({ session, profile }) => {
   useEffect(() => {
     const fetchPost = async () => {
       setIsLoading(true)
-
-      // 조회수 증가
       await supabase.rpc('increment_view_count', { post_id: Number(id) })
-
       const { data } = await supabase
         .from('posts')
         .select(`
@@ -40,7 +37,6 @@ const PostDetailPage = ({ session, profile }) => {
         `)
         .eq('id', id)
         .single()
-
       setPost(data)
       setIsLoading(false)
     }
@@ -50,9 +46,7 @@ const PostDetailPage = ({ session, profile }) => {
   const handleDoItNow = async () => {
     if (isDoingItNow) return
     setIsDoingItNow(true)
-
     const { data } = await supabase.rpc('increment_do_it_now', { post_id: Number(id) })
-
     if (data !== null) {
       setPost((prev) => ({ ...prev, do_it_now_count: data }))
       setJustDid(true)
@@ -75,16 +69,16 @@ const PostDetailPage = ({ session, profile }) => {
         }}
       >
         <Container maxWidth="md">
-          <Box sx={{ py: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-            <IconButton onClick={() => navigate(-1)} sx={{ color: 'text.secondary' }}>
+          <Box sx={{ py: { xs: 1.5, sm: 2 }, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <IconButton onClick={() => navigate(-1)} sx={{ color: 'text.secondary', p: { xs: 0.5, sm: 1 } }}>
               <ArrowBackIcon />
             </IconButton>
             <Typography
               sx={{
                 fontFamily: '"Press Start 2P", monospace',
-                fontSize: '0.9rem',
+                fontSize: { xs: '0.7rem', sm: '0.9rem' },
                 color: '#5a9be8',
-                textShadow: '0 0 10px rgba(58,123,213,0.4)',
+                textShadow: '0 0 10px rgba(58,123,213,0.5)',
               }}
             >
               UNTIL DAWN
@@ -93,10 +87,10 @@ const PostDetailPage = ({ session, profile }) => {
         </Container>
       </Box>
 
-      <Container maxWidth="md" sx={{ py: 5 }}>
+      <Container maxWidth="md" sx={{ py: { xs: 3, sm: 5 }, px: { xs: 2, sm: 3 } }}>
         {isLoading ? (
           <Box sx={{ textAlign: 'center', py: 8 }}>
-            <CircularProgress sx={{ color: '#5a9be8' }} />
+            <CircularProgress sx={{ color: '#3a7bd5' }} />
           </Box>
         ) : !post ? (
           <Box sx={{ textAlign: 'center', py: 8 }}>
@@ -108,20 +102,23 @@ const PostDetailPage = ({ session, profile }) => {
         ) : (
           <>
             {/* 제목 */}
-            <Typography variant="h1" sx={{ mb: 2, lineHeight: 1.4 }}>
+            <Typography
+              variant="h1"
+              sx={{ mb: 2, lineHeight: 1.4, fontSize: { xs: '1.4rem', sm: '1.8rem', md: '2rem' } }}
+            >
               {post.title}
             </Typography>
 
             {/* 메타 정보 */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4, flexWrap: 'wrap' }}>
-              <Typography variant="body2" sx={{ color: '#5a9be8' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 }, mb: 4, flexWrap: 'wrap' }}>
+              <Typography variant="body2" sx={{ color: '#5a9be8', fontWeight: 600 }}>
                 {post.profiles?.name || post.profiles?.username}
               </Typography>
               <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                 {formatDate(post.created_at)}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <VisibilityIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
+                <VisibilityIcon sx={{ fontSize: 13, color: 'text.disabled' }} />
                 <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                   {post.view_count}
                 </Typography>
@@ -137,7 +134,12 @@ const PostDetailPage = ({ session, profile }) => {
                   component="img"
                   src={post.image_url}
                   alt="게시물 이미지"
-                  sx={{ width: '100%', maxHeight: 400, objectFit: 'cover', borderRadius: 1 }}
+                  sx={{
+                    width: '100%',
+                    maxHeight: { xs: 220, sm: 320, md: 400 },
+                    objectFit: 'cover',
+                    borderRadius: 1,
+                  }}
                 />
               </Box>
             )}
@@ -150,6 +152,7 @@ const PostDetailPage = ({ session, profile }) => {
                 lineHeight: 1.9,
                 whiteSpace: 'pre-wrap',
                 mb: 6,
+                fontSize: { xs: '0.9rem', sm: '0.95rem' },
               }}
             >
               {post.content}
@@ -158,25 +161,23 @@ const PostDetailPage = ({ session, profile }) => {
             <Divider sx={{ mb: 4 }} />
 
             {/* Do it now 버튼 */}
-            <Box sx={{ textAlign: 'center', py: 4 }}>
+            <Box sx={{ textAlign: 'center', py: { xs: 3, sm: 4 } }}>
               <Button
                 variant="contained"
                 onClick={handleDoItNow}
                 disabled={isDoingItNow}
                 sx={{
-                  px: 5,
-                  py: 2,
-                  fontSize: '1rem',
+                  px: { xs: 4, sm: 6 },
+                  py: { xs: 1.5, sm: 2 },
+                  fontSize: { xs: '0.9rem', sm: '1rem' },
                   fontWeight: 700,
                   letterSpacing: '0.1em',
                   background: justDid
-                    ? 'linear-gradient(135deg, #5a9e72 0%, #3d7a55 100%)'
-                    : 'linear-gradient(135deg, #5a9be8 0%, #1a5aaa 100%)',
-                  color: '#04080f',
+                    ? 'linear-gradient(135deg, #4a8e6a 0%, #2d6a4a 100%)'
+                    : 'linear-gradient(135deg, #3a7bd5 0%, #1a5aaa 100%)',
+                  color: '#e8f0fa',
                   transition: 'all 0.3s',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                  },
+                  '&:hover': { transform: 'scale(1.05)' },
                 }}
               >
                 {justDid ? '✅ 했어요!' : '✊ Do it now'}
@@ -189,7 +190,7 @@ const PostDetailPage = ({ session, profile }) => {
                     background: 'rgba(58,123,213,0.08)',
                     color: post.do_it_now_count > 0 ? '#5a9be8' : 'text.disabled',
                     border: `1px solid ${post.do_it_now_count > 0 ? 'rgba(58,123,213,0.3)' : 'rgba(255,255,255,0.05)'}`,
-                    fontSize: '0.8rem',
+                    fontSize: { xs: '0.75rem', sm: '0.8rem' },
                   }}
                 />
               </Box>
