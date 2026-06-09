@@ -62,12 +62,12 @@ const PostDetailPage = ({ session, profile }) => {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', background: '#0a0d1a' }}>
+    <Box sx={{ minHeight: '100vh', background: '#04080f' }}>
       {/* 헤더 */}
       <Box
         sx={{
-          borderBottom: '1px solid rgba(232,200,74,0.12)',
-          background: 'rgba(10,13,26,0.95)',
+          borderBottom: '1px solid rgba(58,123,213,0.12)',
+          background: 'rgba(4,8,15,0.95)',
           backdropFilter: 'blur(8px)',
           position: 'sticky',
           top: 0,
@@ -83,8 +83,8 @@ const PostDetailPage = ({ session, profile }) => {
               sx={{
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '0.9rem',
-                color: '#e8c84a',
-                textShadow: '0 0 10px rgba(232,200,74,0.4)',
+                color: '#5a9be8',
+                textShadow: '0 0 10px rgba(58,123,213,0.4)',
               }}
             >
               UNTIL DAWN
@@ -96,12 +96,12 @@ const PostDetailPage = ({ session, profile }) => {
       <Container maxWidth="md" sx={{ py: 5 }}>
         {isLoading ? (
           <Box sx={{ textAlign: 'center', py: 8 }}>
-            <CircularProgress sx={{ color: '#e8c84a' }} />
+            <CircularProgress sx={{ color: '#5a9be8' }} />
           </Box>
         ) : !post ? (
           <Box sx={{ textAlign: 'center', py: 8 }}>
             <Typography sx={{ color: 'text.secondary' }}>게시물을 찾을 수 없습니다.</Typography>
-            <Button onClick={() => navigate('/')} sx={{ mt: 2, color: '#e8c84a' }}>
+            <Button onClick={() => navigate('/')} sx={{ mt: 2, color: '#5a9be8' }}>
               목록으로
             </Button>
           </Box>
@@ -114,7 +114,7 @@ const PostDetailPage = ({ session, profile }) => {
 
             {/* 메타 정보 */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4, flexWrap: 'wrap' }}>
-              <Typography variant="body2" sx={{ color: '#e8c84a' }}>
+              <Typography variant="body2" sx={{ color: '#5a9be8' }}>
                 {post.profiles?.name || post.profiles?.username}
               </Typography>
               <Typography variant="caption" sx={{ color: 'text.disabled' }}>
@@ -171,8 +171,8 @@ const PostDetailPage = ({ session, profile }) => {
                   letterSpacing: '0.1em',
                   background: justDid
                     ? 'linear-gradient(135deg, #5a9e72 0%, #3d7a55 100%)'
-                    : 'linear-gradient(135deg, #e8c84a 0%, #d4a820 100%)',
-                  color: '#0a0d1a',
+                    : 'linear-gradient(135deg, #5a9be8 0%, #1a5aaa 100%)',
+                  color: '#04080f',
                   transition: 'all 0.3s',
                   '&:hover': {
                     transform: 'scale(1.05)',
@@ -186,9 +186,9 @@ const PostDetailPage = ({ session, profile }) => {
                 <Chip
                   label={`${post.do_it_now_count}명이 지금 하러 갔습니다`}
                   sx={{
-                    background: 'rgba(232,200,74,0.08)',
-                    color: post.do_it_now_count > 0 ? '#e8c84a' : 'text.disabled',
-                    border: `1px solid ${post.do_it_now_count > 0 ? 'rgba(232,200,74,0.3)' : 'rgba(255,255,255,0.05)'}`,
+                    background: 'rgba(58,123,213,0.08)',
+                    color: post.do_it_now_count > 0 ? '#5a9be8' : 'text.disabled',
+                    border: `1px solid ${post.do_it_now_count > 0 ? 'rgba(58,123,213,0.3)' : 'rgba(255,255,255,0.05)'}`,
                     fontSize: '0.8rem',
                   }}
                 />

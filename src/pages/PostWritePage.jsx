@@ -54,12 +54,12 @@ const PostWritePage = ({ session, profile }) => {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', background: '#0a0d1a' }}>
+    <Box sx={{ minHeight: '100vh', background: '#04080f' }}>
       {/* 헤더 */}
       <Box
         sx={{
-          borderBottom: '1px solid rgba(232,200,74,0.12)',
-          background: 'rgba(10,13,26,0.95)',
+          borderBottom: '1px solid rgba(58,123,213,0.12)',
+          background: 'rgba(4,8,15,0.95)',
           backdropFilter: 'blur(8px)',
           position: 'sticky',
           top: 0,
@@ -75,8 +75,8 @@ const PostWritePage = ({ session, profile }) => {
               sx={{
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '0.9rem',
-                color: '#e8c84a',
-                textShadow: '0 0 10px rgba(232,200,74,0.4)',
+                color: '#5a9be8',
+                textShadow: '0 0 10px rgba(58,123,213,0.4)',
               }}
             >
               UNTIL DAWN
@@ -149,9 +149,9 @@ const PostWritePage = ({ session, profile }) => {
               onClick={handleAddImage}
               sx={{
                 mb: 3,
-                borderColor: 'rgba(232,200,74,0.2)',
+                borderColor: 'rgba(58,123,213,0.2)',
                 color: 'text.secondary',
-                '&:hover': { borderColor: '#e8c84a', color: '#e8c84a' },
+                '&:hover': { borderColor: '#5a9be8', color: '#5a9be8' },
               }}
             >
               랜덤 이미지 추가
@@ -162,7 +162,7 @@ const PostWritePage = ({ session, profile }) => {
             <Button
               variant="outlined"
               onClick={() => navigate(-1)}
-              sx={{ borderColor: 'rgba(232,200,74,0.2)', color: 'text.secondary' }}
+              sx={{ borderColor: 'rgba(58,123,213,0.2)', color: 'text.secondary' }}
             >
               취소
             </Button>

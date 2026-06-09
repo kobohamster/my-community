@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabase'
 import LoginPage from './pages/LoginPage'
@@ -7,25 +7,27 @@ import PostListPage from './pages/PostListPage'
 import PostWritePage from './pages/PostWritePage'
 import PostDetailPage from './pages/PostDetailPage'
 
-const ProtectedRoute = ({ children, session, profile }) => {
-  if (!session) return <Navigate to="/login" replace />
-  if (!profile) return null
+const GUEST_DURATION_MS = 3 * 60 * 1000 // 3분
+
+const ProtectedRoute = ({ children, session, profile, isGuest }) => {
+  if (!session && !isGuest) return <Navigate to="/login" replace />
+  if (session && !profile) return null
   return children
 }
 
 const App = () => {
   const [session, setSession] = useState(undefined)
   const [profile, setProfile] = useState(null)
+  const [isGuest, setIsGuest] = useState(false)
+  const [guestSecondsLeft, setGuestSecondsLeft] = useState(0)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
     })
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
-
     return () => subscription.unsubscribe()
   }, [])
 
@@ -42,6 +44,27 @@ const App = () => {
       .then(({ data }) => setProfile(data))
   }, [session])
 
+  // 게스트 타이머
+  useEffect(() => {
+    if (!isGuest) return
+    setGuestSecondsLeft(GUEST_DURATION_MS / 1000)
+    const interval = setInterval(() => {
+      setGuestSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval)
+          setIsGuest(false)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [isGuest])
+
+  const handleGuestAccess = useCallback(() => {
+    setIsGuest(true)
+  }, [])
+
   if (session === undefined) return null
 
   return (
@@ -49,30 +72,45 @@ const App = () => {
       <Routes>
         <Route
           path="/login"
-          element={session ? <Navigate to="/" replace /> : <LoginPage />}
+          element={
+            session ? (
+              <Navigate to="/" replace />
+            ) : (
+              <LoginPage onGuestAccess={handleGuestAccess} />
+            )
+          }
         />
         <Route path="/signup" element={<SignupPage />} />
         <Route
           path="/"
           element={
-            <ProtectedRoute session={session} profile={profile}>
-              <PostListPage session={session} profile={profile} />
+            <ProtectedRoute session={session} profile={profile} isGuest={isGuest}>
+              <PostListPage
+                session={session}
+                profile={profile}
+                isGuest={isGuest}
+                guestSecondsLeft={guestSecondsLeft}
+              />
             </ProtectedRoute>
           }
         />
         <Route
           path="/write"
           element={
-            <ProtectedRoute session={session} profile={profile}>
-              <PostWritePage session={session} profile={profile} />
-            </ProtectedRoute>
+            isGuest ? (
+              <Navigate to="/" replace />
+            ) : (
+              <ProtectedRoute session={session} profile={profile} isGuest={false}>
+                <PostWritePage session={session} profile={profile} />
+              </ProtectedRoute>
+            )
           }
         />
         <Route
           path="/post/:id"
           element={
-            <ProtectedRoute session={session} profile={profile}>
-              <PostDetailPage session={session} profile={profile} />
+            <ProtectedRoute session={session} profile={profile} isGuest={isGuest}>
+              <PostDetailPage session={session} profile={profile} isGuest={isGuest} />
             </ProtectedRoute>
           }
         />

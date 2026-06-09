@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import {
-  Box, Container, TextField, Button, Typography, Alert, CircularProgress
+  Box, Container, TextField, Button, Typography, Alert, CircularProgress, Divider
 } from '@mui/material'
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import { supabase } from '../supabase'
 
-const LoginPage = () => {
+const LoginPage = ({ onGuestAccess }) => {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -29,11 +30,16 @@ const LoginPage = () => {
     setIsLoading(false)
   }
 
+  const handleGuest = () => {
+    onGuestAccess()
+    navigate('/')
+  }
+
   return (
     <Box
       sx={{
         minHeight: '100vh',
-        background: 'radial-gradient(ellipse at top, #0d1b35 0%, #0a0d1a 60%)',
+        background: 'radial-gradient(ellipse at 50% 0%, #0d1f3a 0%, #04080f 65%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -45,9 +51,9 @@ const LoginPage = () => {
           <Typography
             sx={{
               fontFamily: '"Press Start 2P", monospace',
-              fontSize: { xs: '1.2rem', sm: '1.5rem' },
-              color: '#e8c84a',
-              textShadow: '0 0 20px rgba(232,200,74,0.6), 0 0 40px rgba(232,200,74,0.3)',
+              fontSize: { xs: '1.1rem', sm: '1.4rem' },
+              color: '#5a9be8',
+              textShadow: '0 0 20px rgba(58,123,213,0.7), 0 0 50px rgba(58,123,213,0.3)',
               letterSpacing: '0.05em',
               lineHeight: 1.4,
               mb: 1,
@@ -55,7 +61,7 @@ const LoginPage = () => {
           >
             UNTIL DAWN
           </Typography>
-          <Typography variant="caption" sx={{ color: '#8090a8', letterSpacing: '0.2em' }}>
+          <Typography variant="caption" sx={{ color: '#607890', letterSpacing: '0.2em' }}>
             영원히 일을 미루는 모임
           </Typography>
         </Box>
@@ -65,14 +71,14 @@ const LoginPage = () => {
           component="form"
           onSubmit={handleLogin}
           sx={{
-            background: 'rgba(17, 20, 40, 0.9)',
-            border: '1px solid rgba(232, 200, 74, 0.2)',
+            background: 'rgba(8, 15, 30, 0.92)',
+            border: '1px solid rgba(58, 123, 213, 0.2)',
             borderRadius: 2,
             p: 4,
             backdropFilter: 'blur(10px)',
           }}
         >
-          <Typography variant="h4" sx={{ mb: 3, color: 'text.primary', textAlign: 'center' }}>
+          <Typography variant="h4" sx={{ mb: 3, textAlign: 'center' }}>
             로그인
           </Typography>
 
@@ -116,12 +122,40 @@ const LoginPage = () => {
             variant="outlined"
             fullWidth
             sx={{
-              borderColor: 'rgba(232,200,74,0.3)',
+              mb: 3,
+              borderColor: 'rgba(58,123,213,0.3)',
               color: 'text.secondary',
-              '&:hover': { borderColor: '#e8c84a', color: '#e8c84a' },
+              '&:hover': { borderColor: '#3a7bd5', color: '#5a9be8' },
             }}
           >
             회원가입하러 가기
+          </Button>
+
+          <Divider sx={{ mb: 3 }}>
+            <Typography variant="caption" sx={{ color: 'text.disabled', px: 1 }}>
+              또는
+            </Typography>
+          </Divider>
+
+          {/* 둘러보기 버튼 */}
+          <Button
+            variant="text"
+            fullWidth
+            startIcon={<RemoveRedEyeOutlinedIcon />}
+            onClick={handleGuest}
+            sx={{
+              color: 'text.disabled',
+              fontSize: '0.85rem',
+              py: 1,
+              border: '1px dashed rgba(58,123,213,0.15)',
+              '&:hover': {
+                color: 'text.secondary',
+                borderColor: 'rgba(58,123,213,0.35)',
+                background: 'rgba(58,123,213,0.05)',
+              },
+            }}
+          >
+            둘러보기 (3분, 글쓰기 불가)
           </Button>
         </Box>
       </Container>

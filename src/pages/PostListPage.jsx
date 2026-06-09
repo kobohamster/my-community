@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Box, Container, Typography, Button, Card, CardActionArea,
-  CardContent, Grid, Chip, CircularProgress, Divider
+  CardContent, Grid, Chip, CircularProgress, Divider, Alert
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
 import { supabase } from '../supabase'
 
 const formatDate = (iso) => {
@@ -19,7 +20,9 @@ const formatDate = (iso) => {
   return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
 }
 
-const PostListPage = ({ session, profile }) => {
+const formatSeconds = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+
+const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
   const navigate = useNavigate()
   const [posts, setPosts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -46,17 +49,12 @@ const PostListPage = ({ session, profile }) => {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        background: '#0a0d1a',
-      }}
-    >
+    <Box sx={{ minHeight: '100vh', background: '#04080f' }}>
       {/* 헤더 */}
       <Box
         sx={{
-          borderBottom: '1px solid rgba(232,200,74,0.12)',
-          background: 'rgba(10,13,26,0.95)',
+          borderBottom: '1px solid rgba(58,123,213,0.12)',
+          background: 'rgba(4,8,15,0.95)',
           backdropFilter: 'blur(8px)',
           position: 'sticky',
           top: 0,
@@ -69,39 +67,87 @@ const PostListPage = ({ session, profile }) => {
               sx={{
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: '0.9rem',
-                color: '#e8c84a',
-                textShadow: '0 0 10px rgba(232,200,74,0.4)',
+                color: '#5a9be8',
+                textShadow: '0 0 10px rgba(58,123,213,0.5)',
               }}
             >
               UNTIL DAWN
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mr: 1 }}>
-                {profile?.name}
-              </Typography>
-              <Button
-                size="small"
-                variant="outlined"
-                onClick={handleLogout}
-                sx={{
-                  borderColor: 'rgba(232,200,74,0.2)',
-                  color: 'text.secondary',
-                  fontSize: '0.75rem',
-                  '&:hover': { borderColor: '#e8c84a', color: '#e8c84a' },
-                }}
-              >
-                로그아웃
-              </Button>
+              {isGuest ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <TimerOutlinedIcon sx={{ fontSize: 14, color: guestSecondsLeft < 60 ? '#c05070' : 'text.disabled' }} />
+                  <Typography
+                    variant="caption"
+                    sx={{ color: guestSecondsLeft < 60 ? '#c05070' : 'text.disabled', fontFamily: 'monospace' }}
+                  >
+                    {formatSeconds(guestSecondsLeft)}
+                  </Typography>
+                </Box>
+              ) : (
+                <Typography variant="caption" sx={{ color: 'text.secondary', mr: 1 }}>
+                  {profile?.name}
+                </Typography>
+              )}
+              {isGuest ? (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => navigate('/login')}
+                  sx={{
+                    borderColor: 'rgba(58,123,213,0.4)',
+                    color: '#5a9be8',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  로그인
+                </Button>
+              ) : (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={handleLogout}
+                  sx={{
+                    borderColor: 'rgba(58,123,213,0.2)',
+                    color: 'text.secondary',
+                    fontSize: '0.75rem',
+                    '&:hover': { borderColor: '#3a7bd5', color: '#5a9be8' },
+                  }}
+                >
+                  로그아웃
+                </Button>
+              )}
             </Box>
           </Box>
         </Container>
       </Box>
 
       <Container maxWidth="md" sx={{ py: 4 }}>
+        {/* 게스트 안내 배너 */}
+        {isGuest && (
+          <Alert
+            severity="info"
+            icon={<TimerOutlinedIcon />}
+            sx={{
+              mb: 3,
+              background: 'rgba(58,123,213,0.08)',
+              border: '1px solid rgba(58,123,213,0.2)',
+              color: 'text.secondary',
+              '& .MuiAlert-icon': { color: '#3a7bd5' },
+            }}
+          >
+            둘러보기 중입니다. 남은 시간{' '}
+            <strong style={{ color: guestSecondsLeft < 60 ? '#c05070' : '#5a9be8' }}>
+              {formatSeconds(guestSecondsLeft)}
+            </strong>{' '}
+            — 글쓰기는 로그인 후 이용할 수 있습니다.
+          </Alert>
+        )}
+
         {/* 타이틀 + 글쓰기 */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
           <Box>
-            <Typography variant="h2" sx={{ color: 'text.primary', mb: 0.5 }}>
+            <Typography variant="h2" sx={{ mb: 0.5 }}>
               게시물 목록
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -112,7 +158,12 @@ const PostListPage = ({ session, profile }) => {
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => navigate('/write')}
-            sx={{ whiteSpace: 'nowrap' }}
+            disabled={isGuest}
+            sx={{
+              whiteSpace: 'nowrap',
+              ...(isGuest && { opacity: 0.4 }),
+            }}
+            title={isGuest ? '로그인 후 글쓰기 가능' : ''}
           >
             글쓰기
           </Button>
@@ -122,7 +173,7 @@ const PostListPage = ({ session, profile }) => {
 
         {isLoading ? (
           <Box sx={{ textAlign: 'center', py: 8 }}>
-            <CircularProgress sx={{ color: '#e8c84a' }} />
+            <CircularProgress sx={{ color: '#3a7bd5' }} />
           </Box>
         ) : posts.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 10 }}>
@@ -148,24 +199,13 @@ const PostListPage = ({ session, profile }) => {
                         <Box sx={{ flex: 1, minWidth: 0 }}>
                           <Typography
                             variant="h4"
-                            sx={{
-                              mb: 1,
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                            }}
+                            sx={{ mb: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                           >
                             {post.title}
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{
-                              color: 'text.secondary',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              mb: 2,
-                            }}
+                            sx={{ color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', mb: 2 }}
                           >
                             {post.content}
                           </Typography>
@@ -192,9 +232,9 @@ const PostListPage = ({ session, profile }) => {
                             label={`✊ ${post.do_it_now_count}`}
                             size="small"
                             sx={{
-                              background: 'rgba(232,200,74,0.1)',
-                              color: '#e8c84a',
-                              border: '1px solid rgba(232,200,74,0.3)',
+                              background: 'rgba(58,123,213,0.1)',
+                              color: '#5a9be8',
+                              border: '1px solid rgba(58,123,213,0.3)',
                               fontSize: '0.75rem',
                               flexShrink: 0,
                             }}
