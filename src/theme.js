@@ -20,9 +20,9 @@ const theme = createTheme({
       contrastText: '#b0cce8',
     },
     text: {
-      primary: '#c0d4e8',
-      secondary: '#607890',
-      disabled: '#2a3d50',
+      primary: '#ddeeff',
+      secondary: '#90b4cc',
+      disabled: '#5a7890',
     },
     divider: 'rgba(58, 123, 213, 0.15)',
     error: { main: '#c05070' },
@@ -36,7 +36,7 @@ const theme = createTheme({
     h4: { fontSize: '1.1rem', fontWeight: 600 },
     body1: { fontSize: '0.95rem', lineHeight: 1.7 },
     body2: { fontSize: '0.85rem', lineHeight: 1.6 },
-    caption: { fontSize: '0.75rem', color: '#607890' },
+    caption: { fontSize: '0.75rem', color: '#90b4cc' },
   },
   shape: { borderRadius: 4 },
   components: {
