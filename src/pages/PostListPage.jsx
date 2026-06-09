@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Box, Container, Typography, Button, Card, CardActionArea,
-  CardContent, Grid, Chip, CircularProgress, Divider, Alert
+  CardContent, Chip, CircularProgress, Divider, Alert
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -212,90 +212,77 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
             </Typography>
           </Box>
         ) : (
-          <Grid container spacing={{ xs: 1.5, sm: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2 }, alignItems: 'flex-start' }}>
             {posts.map((post) => (
-              <Grid item xs={12} key={post.id}>
-                <Card
-                  sx={{
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    '&:hover': { transform: 'translateY(-2px)' },
-                  }}
-                >
-                  <CardActionArea onClick={() => navigate(`/post/${post.id}`)}>
-                    <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          justifyContent: 'space-between',
-                          gap: 1.5,
-                        }}
-                      >
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Typography
-                            variant="h4"
-                            sx={{
-                              mb: 0.8,
-                              fontSize: { xs: '0.95rem', sm: '1.1rem' },
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                            }}
-                          >
-                            {post.title}
+              <Card
+                key={post.id}
+                sx={{
+                  width: { xs: '100%', sm: 'fit-content' },
+                  minWidth: { sm: 320 },
+                  maxWidth: { xs: '100%', sm: 640 },
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  '&:hover': { transform: 'translateY(-2px)' },
+                }}
+              >
+                <CardActionArea onClick={() => navigate(`/post/${post.id}`)}>
+                  <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        justifyContent: 'space-between',
+                        gap: 1.5,
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h4"
+                          sx={{
+                            mb: 0.8,
+                            fontSize: { xs: '0.95rem', sm: '1.1rem' },
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {post.title}
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 }, flexWrap: 'wrap' }}>
+                          <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                            {post.profiles?.name || post.profiles?.username}
                           </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: 'text.secondary',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              mb: 1.5,
-                              display: { xs: 'none', sm: 'block' },
-                            }}
-                          >
-                            {post.content}
-                          </Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 }, flexWrap: 'wrap' }}>
-                            <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                              {post.profiles?.name || post.profiles?.username}
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <AccessTimeIcon sx={{ fontSize: 14, color: 'rgb(192, 212, 232)' }} />
+                            <Typography variant="caption" sx={{ color: 'rgb(192, 212, 232)' }}>
+                              {formatDate(post.created_at)}
                             </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <AccessTimeIcon sx={{ fontSize: 14, color: 'rgb(192, 212, 232)' }} />
-                              <Typography variant="caption" sx={{ color: 'rgb(192, 212, 232)' }}>
-                                {formatDate(post.created_at)}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <VisibilityIcon sx={{ fontSize: 14, color: 'rgb(192, 212, 232)' }} />
-                              <Typography variant="caption" sx={{ color: 'rgb(192, 212, 232)' }}>
-                                {post.view_count}
-                              </Typography>
-                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <VisibilityIcon sx={{ fontSize: 14, color: 'rgb(192, 212, 232)' }} />
+                            <Typography variant="caption" sx={{ color: 'rgb(192, 212, 232)' }}>
+                              {post.view_count}
+                            </Typography>
                           </Box>
                         </Box>
-                        {post.do_it_now_count > 0 && (
-                          <Chip
-                            label={`✊ ${post.do_it_now_count}`}
-                            size="small"
-                            sx={{
-                              background: 'rgba(58,123,213,0.1)',
-                              color: '#5a9be8',
-                              border: '1px solid rgba(58,123,213,0.3)',
-                              fontSize: '0.7rem',
-                              flexShrink: 0,
-                            }}
-                          />
-                        )}
                       </Box>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
+                      {post.do_it_now_count > 0 && (
+                        <Chip
+                          label={`✊ ${post.do_it_now_count}`}
+                          size="small"
+                          sx={{
+                            background: 'rgba(58,123,213,0.1)',
+                            color: '#5a9be8',
+                            border: '1px solid rgba(58,123,213,0.3)',
+                            fontSize: '0.7rem',
+                            flexShrink: 0,
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         )}
       </Container>
     </Box>
