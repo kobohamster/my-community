@@ -217,9 +217,7 @@ const PostListPage = ({ session, profile, isGuest, guestSecondsLeft }) => {
               <Card
                 key={post.id}
                 sx={{
-                  width: { xs: '100%', sm: 'fit-content' },
-                  minWidth: { sm: 320 },
-                  maxWidth: { xs: '100%', sm: 640 },
+                  width: '100%',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
                   '&:hover': { transform: 'translateY(-2px)' },
