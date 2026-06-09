@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   Box, Container, Typography, Button, CircularProgress,
-  Divider, IconButton, Chip
+  Divider, IconButton, Chip, Dialog, DialogTitle,
+  DialogContent, DialogActions
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { supabase } from '../supabase'
 
 const formatDate = (iso) => {
@@ -23,6 +25,8 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isDoingItNow, setIsDoingItNow] = useState(false)
   const [justDid, setJustDid] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -31,7 +35,7 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
       const { data } = await supabase
         .from('posts')
         .select(`
-          id, title, content, image_url,
+          id, title, content, image_url, user_id,
           view_count, do_it_now_count, created_at,
           profiles!posts_user_id_fkey (username, name)
         `)
@@ -54,6 +58,17 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
     }
     setIsDoingItNow(false)
   }
+
+  const handleDelete = async () => {
+    setIsDeleting(true)
+    const { error } = await supabase.from('posts').delete().eq('id', id)
+    if (!error) {
+      navigate('/')
+    }
+    setIsDeleting(false)
+  }
+
+  const isAuthor = session?.user?.id === post?.user_id
 
   return (
     <Box sx={{ minHeight: '100vh', background: '#04080f' }}>
@@ -104,13 +119,29 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
           </Box>
         ) : (
           <>
-            {/* 제목 */}
-            <Typography
-              variant="h1"
-              sx={{ mb: 2, lineHeight: 1.4, fontSize: { xs: '1.4rem', sm: '1.8rem', md: '2rem' } }}
-            >
-              {post.title}
-            </Typography>
+            {/* 제목 + 삭제 버튼 */}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 2, mb: 2 }}>
+              <Typography
+                variant="h1"
+                sx={{ lineHeight: 1.4, fontSize: { xs: '1.4rem', sm: '1.8rem', md: '2rem' }, flex: 1 }}
+              >
+                {post.title}
+              </Typography>
+              {isAuthor && (
+                <IconButton
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                  sx={{
+                    color: 'text.disabled',
+                    flexShrink: 0,
+                    mt: 0.5,
+                    '&:hover': { color: '#c05070', background: 'rgba(192,80,112,0.08)' },
+                  }}
+                  title="게시물 삭제"
+                >
+                  <DeleteOutlineIcon />
+                </IconButton>
+              )}
+            </Box>
 
             {/* 메타 정보 */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 }, mb: 4, flexWrap: 'wrap' }}>
@@ -212,6 +243,47 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
           </>
         )}
       </Container>
+
+      {/* 삭제 확인 다이얼로그 */}
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            background: '#080f1e',
+            border: '1px solid rgba(58,123,213,0.2)',
+            borderRadius: 2,
+            minWidth: 280,
+          },
+        }}
+      >
+        <DialogTitle sx={{ color: 'text.primary', fontSize: '1rem' }}>
+          게시물을 삭제할까요?
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            삭제한 게시물은 복구할 수 없습니다.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1 }}>
+          <Button
+            onClick={() => setIsDeleteDialogOpen(false)}
+            sx={{ color: 'text.secondary' }}
+          >
+            취소
+          </Button>
+          <Button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            sx={{
+              color: '#c05070',
+              '&:hover': { background: 'rgba(192,80,112,0.08)' },
+            }}
+          >
+            {isDeleting ? <CircularProgress size={18} sx={{ color: '#c05070' }} /> : '삭제'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
