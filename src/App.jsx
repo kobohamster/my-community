@@ -6,6 +6,7 @@ import SignupPage from './pages/SignupPage'
 import PostListPage from './pages/PostListPage'
 import PostWritePage from './pages/PostWritePage'
 import PostDetailPage from './pages/PostDetailPage'
+import PostEditPage from './pages/PostEditPage'
 
 const GUEST_DURATION_MS = 3 * 60 * 1000 // 3분
 
@@ -112,6 +113,18 @@ const App = () => {
             <ProtectedRoute session={session} profile={profile} isGuest={isGuest}>
               <PostDetailPage session={session} profile={profile} isGuest={isGuest} />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/post/:id/edit"
+          element={
+            isGuest ? (
+              <Navigate to="/" replace />
+            ) : (
+              <ProtectedRoute session={session} profile={profile} isGuest={false}>
+                <PostEditPage session={session} />
+              </ProtectedRoute>
+            )
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

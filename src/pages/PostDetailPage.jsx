@@ -8,6 +8,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined'
 import { supabase } from '../supabase'
 
 const formatDate = (iso) => {
@@ -128,18 +129,28 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
                 {post.title}
               </Typography>
               {isAuthor && (
-                <IconButton
-                  onClick={() => setIsDeleteDialogOpen(true)}
-                  sx={{
-                    color: 'text.disabled',
-                    flexShrink: 0,
-                    mt: 0.5,
-                    '&:hover': { color: '#c05070', background: 'rgba(192,80,112,0.08)' },
-                  }}
-                  title="게시물 삭제"
-                >
-                  <DeleteOutlinedIcon />
-                </IconButton>
+                <Box sx={{ display: 'flex', gap: 0.5, flexShrink: 0, mt: 0.5 }}>
+                  <IconButton
+                    onClick={() => navigate(`/post/${id}/edit`)}
+                    sx={{
+                      color: 'text.disabled',
+                      '&:hover': { color: '#5a9be8', background: 'rgba(58,123,213,0.08)' },
+                    }}
+                    title="게시물 수정"
+                  >
+                    <ModeEditOutlinedIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                    sx={{
+                      color: 'text.disabled',
+                      '&:hover': { color: '#c05070', background: 'rgba(192,80,112,0.08)' },
+                    }}
+                    title="게시물 삭제"
+                  >
+                    <DeleteOutlinedIcon />
+                  </IconButton>
+                </Box>
               )}
             </Box>
 
