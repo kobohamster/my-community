@@ -7,7 +7,7 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import { supabase } from '../supabase'
 
 const formatDate = (iso) => {
@@ -138,7 +138,7 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
                   }}
                   title="게시물 삭제"
                 >
-                  <DeleteOutlineIcon />
+                  <DeleteOutlinedIcon />
                 </IconButton>
               )}
             </Box>
