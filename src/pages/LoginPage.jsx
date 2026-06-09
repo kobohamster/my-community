@@ -61,7 +61,7 @@ const LoginPage = ({ onGuestAccess }) => {
           >
             UNTIL DAWN
           </Typography>
-          <Typography variant="caption" sx={{ color: '#90b4cc', letterSpacing: '0.2em' }}>
+          <Typography variant="caption" sx={{ color: '#b8d4e8', letterSpacing: '0.2em' }}>
             영원히 일을 미루는 모임
           </Typography>
         </Box>
