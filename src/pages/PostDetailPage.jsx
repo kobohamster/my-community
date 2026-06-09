@@ -74,11 +74,14 @@ const PostDetailPage = ({ session, profile, isGuest }) => {
               <ArrowBackIcon />
             </IconButton>
             <Typography
+              onClick={() => navigate('/')}
               sx={{
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: { xs: '0.7rem', sm: '0.9rem' },
                 color: '#5a9be8',
                 textShadow: '0 0 10px rgba(58,123,213,0.5)',
+                cursor: 'pointer',
+                '&:hover': { color: '#7db8f0' },
               }}
             >
               UNTIL DAWN
