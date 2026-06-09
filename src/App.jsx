@@ -6,15 +6,10 @@ import SignupPage from './pages/SignupPage'
 import PostListPage from './pages/PostListPage'
 import PostWritePage from './pages/PostWritePage'
 import PostDetailPage from './pages/PostDetailPage'
-import AdminPage from './pages/AdminPage'
-import PendingPage from './pages/PendingPage'
 
-const ProtectedRoute = ({ children, session, profile, requireAdmin }) => {
+const ProtectedRoute = ({ children, session, profile }) => {
   if (!session) return <Navigate to="/login" replace />
   if (!profile) return null
-  if (profile.status === 'pending') return <Navigate to="/pending" replace />
-  if (profile.status === 'rejected') return <Navigate to="/login" replace />
-  if (requireAdmin && !profile.is_admin) return <Navigate to="/" replace />
   return children
 }
 
@@ -58,14 +53,6 @@ const App = () => {
         />
         <Route path="/signup" element={<SignupPage />} />
         <Route
-          path="/pending"
-          element={
-            session && profile?.status === 'pending'
-              ? <PendingPage profile={profile} />
-              : <Navigate to="/" replace />
-          }
-        />
-        <Route
           path="/"
           element={
             <ProtectedRoute session={session} profile={profile}>
@@ -86,14 +73,6 @@ const App = () => {
           element={
             <ProtectedRoute session={session} profile={profile}>
               <PostDetailPage session={session} profile={profile} />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute session={session} profile={profile} requireAdmin>
-              <AdminPage session={session} />
             </ProtectedRoute>
           }
         />

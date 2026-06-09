@@ -76,15 +76,6 @@ const PostListPage = ({ session, profile }) => {
               UNTIL DAWN
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-              {profile?.is_admin && (
-                <Button
-                  size="small"
-                  onClick={() => navigate('/admin')}
-                  sx={{ color: 'text.secondary', fontSize: '0.75rem' }}
-                >
-                  관리자
-                </Button>
-              )}
               <Typography variant="caption" sx={{ color: 'text.secondary', mr: 1 }}>
                 {profile?.name}
               </Typography>
