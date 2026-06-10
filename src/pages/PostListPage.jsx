@@ -35,7 +35,7 @@ const PostListPage = () => {
     try {
       let query = supabase
         .from('chocorate_posts')
-        .select('*, profiles(username, profile_image_url)')
+        .select('*, profiles!chocorate_posts_user_id_fkey(username, profile_image_url)')
         .order('created_at', { ascending: false })
 
       if (typeParam === 'dark') query = query.gte('cacao_percentage', 70)

@@ -40,7 +40,7 @@ const PostDetailPage = () => {
   const fetchPost = useCallback(async () => {
     const { data, error: err } = await supabase
       .from('chocorate_posts')
-      .select('*, profiles(username, profile_image_url)')
+      .select('*, profiles!chocorate_posts_user_id_fkey(username, profile_image_url)')
       .eq('id', id)
       .single()
     if (err) { setError('게시물을 불러올 수 없습니다.'); return }
@@ -50,7 +50,7 @@ const PostDetailPage = () => {
   const fetchComments = useCallback(async () => {
     const { data } = await supabase
       .from('chocorate_comments')
-      .select('*, profiles(username, profile_image_url)')
+      .select('*, profiles!chocorate_comments_user_id_fkey(username, profile_image_url)')
       .eq('post_id', id)
       .order('created_at', { ascending: true })
     setComments(data || [])

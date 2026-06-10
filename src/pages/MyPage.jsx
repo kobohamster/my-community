@@ -24,11 +24,11 @@ const MyPage = () => {
     setLoading(true)
     const [postsRes, bookmarksRes, likedRes] = await Promise.all([
       supabase.from('chocorate_posts')
-        .select('*, profiles(username, profile_image_url)')
+        .select('*, profiles!chocorate_posts_user_id_fkey(username, profile_image_url)')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false }),
       supabase.from('chocorate_bookmarks')
-        .select('post_id, chocorate_posts(*, profiles(username, profile_image_url))')
+        .select('post_id, chocorate_posts(*, profiles!chocorate_posts_user_id_fkey(username, profile_image_url))')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false }),
       supabase.from('chocorate_liked_posts')
