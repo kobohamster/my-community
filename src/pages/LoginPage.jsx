@@ -13,6 +13,7 @@ const LoginPage = () => {
   const [tab, setTab] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [form, setForm] = useState({ email: '', password: '', username: '' })
 
   if (session) return <Navigate to="/" replace />
@@ -31,7 +32,8 @@ const LoginPage = () => {
         if (!form.username.trim()) { setError('닉네임을 입력해주세요.'); return }
         await signUp({ email: form.email, password: form.password, username: form.username.trim() })
         setError('')
-        alert('가입 완료! 이메일을 확인해주세요.')
+        setSuccess('가입 완료! 바로 로그인할 수 있습니다.')
+        setForm({ email: form.email, password: form.password, username: '' })
         setTab(0)
       }
     } catch (err) {
@@ -59,12 +61,13 @@ const LoginPage = () => {
         </Box>
 
         <Box sx={{ bgcolor: 'white', borderRadius: 3, p: 3, boxShadow: '0 2px 12px rgba(64,42,30,0.08)' }}>
-          <Tabs value={tab} onChange={(_, v) => setTab(v)} centered sx={{ mb: 2 }}>
+          <Tabs value={tab} onChange={(_, v) => { setTab(v); setError(''); setSuccess('') }} centered sx={{ mb: 2 }}>
             <Tab label="로그인" />
             <Tab label="회원가입" />
           </Tabs>
 
           {error && <Alert severity="error" sx={{ mb: 2, fontSize: '0.8rem' }}>{error}</Alert>}
+          {success && <Alert severity="success" sx={{ mb: 2, fontSize: '0.8rem' }}>{success}</Alert>}
 
           <form onSubmit={handleSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>

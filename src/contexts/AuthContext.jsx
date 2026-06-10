@@ -25,16 +25,13 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username } },
+      options: { data: { username, name: username } },
     })
     if (error) throw error
     if (data.user) {
-      const { error: profileError } = await supabase.from('profiles').upsert({
-        id: data.user.id,
-        username,
-        profile_image_url: `https://picsum.photos/seed/${data.user.id}/100/100`,
-      })
-      if (profileError) throw profileError
+      await supabase.from('profiles')
+        .update({ profile_image_url: `https://picsum.photos/seed/${data.user.id}/100/100` })
+        .eq('id', data.user.id)
     }
     return data
   }
